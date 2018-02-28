@@ -1,1 +1,36 @@
-# go-elastic-textsearch
+### go-elastic-textsearch
+- cloned from https://github.com/olivere/elastic-with-docker
+
+#### To run:
+- $ docker-compose up
+
+
+#### Creating vendor:
+- install govendor
+- $ govendor init
+- $ govendor list
+- $ govendor add +external // add all external packages
+- $ govendor fetch packagepath // add a specific package
+
+
+#### If 'no such images' error:
+- $ docker-compose ps
+- $ docker-compose rm // remove all old images
+- rebuild again
+
+if still persistent
+- $ docker-compose down
+
+
+#### Removing dangling docker images:
+- $ docker rmi -f $(docker images -f dangling=true -q)
+- warning: do not simply remove images with <noname> tags, because other images may be dependent
+
+#### Removing all containers
+- $ docker rm $(docker ps -a -q)
+
+#### Removing all images
+- $ docker rmi $(docker images -q)
+
+#### Removing images with a specific string pattern
+- $ docker images -a | grep "pattern" | awk '{print $3}' | xargs docker rmi
