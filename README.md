@@ -39,3 +39,6 @@ if still persistent
 - hostport:containerport
 - service to service communications use containerport
 - hostport allows a service to be accesible outside the swarm as well
+
+
+https://www.elastic.co/guide/en/elasticsearch/reference/5.6/nested.html

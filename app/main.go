@@ -22,11 +22,55 @@ const (
 	appName      = "myApp"
 	indexMapping = `{
                         "mappings" : {
-                            "log" : {
+                            "law_details" : {
                                 "properties" : {
-                                    "app" : { "type" : "string", "index" : "not_analyzed" },
-                                    "message" : { "type" : "string", "index" : "not_analyzed" },
-                                    "time" : { "type" : "date" }
+									"created_at": {
+										"type": "string",
+										"index" : "not_analyzed"
+									},
+									"sections": {
+										"type": "nested",
+										"properties": {
+											"details": {
+												"type": "string",
+												"index": "analyzed"
+											},
+											"id": {
+												"type": "integer"
+											},
+											"title": {
+												"type": "string",
+												"index": "analyzed"
+											}
+										}
+									},
+									"ammendments": {
+										"type": "nested",
+										"properties": {
+											"ammendment": {
+												"type": "string",
+												"index": "analyzed"
+											},
+											"atags: {
+												"type": "nested"
+											}
+										}
+									},
+									"act": {
+										"type": "string",
+										"index": "not_analyzed"
+									},
+									"id": {
+										"type": "string",
+										"index": "not_analyzed"
+									},
+									"preamble": {
+										"type": "nested",
+									},
+									"title": {
+										"type": "string",
+										"index": "analyzed"
+									} 
                                 }
                             }
                         }
