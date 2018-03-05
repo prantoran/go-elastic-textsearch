@@ -2,21 +2,33 @@ version: '2.1'
 
 services:
   app:
-    build: ./app
+    build: ./
     restart: on-failure
     depends_on:
-      elasticsearch:
+      esdb:
         condition: service_started
     ports:
       - "6969:6969"
     links:
-      - elasticsearch
-
-  elasticsearch:
-    image: elasticsearch:5
-    command: elasticsearch
-    expose:
-      - "9200"
-      - "9300"
+      - "esdb:linkesdb"
     volumes:
-      - "/tmp/esdata:/usr/share/elasticsearch/data"
+      - ./:/go/src/github.com/prantoran/go-elastic-textsearch
+    
+  esdb:
+    container_name: es5
+    hostname: hostes5
+    image: elasticsearch:5
+    environment:
+      - http.host = 0.0.0.0
+      - transport.host = 127.0.0.1
+      - bootstrap.memory_lock=true
+    restart: always
+    command: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - /tmp/esdata:/usr/share/elasticsearch/data
+      - ./config/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/elasticsearch.yml
+  
+   

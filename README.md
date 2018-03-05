@@ -34,3 +34,8 @@ if still persistent
 
 #### Removing images with a specific string pattern
 - $ docker images -a | grep "pattern" | awk '{print $3}' | xargs docker rmi
+
+#### Host port: Container port
+- hostport:containerport
+- service to service communications use containerport
+- hostport allows a service to be accesible outside the swarm as well

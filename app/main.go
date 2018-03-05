@@ -1,22 +1,23 @@
 package main
 
 import (
-	"context"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"reflect"
+	"os/exec"
+	"sort"
 	"time"
 
-	es "gopkg.in/olivere/elastic.v5"
+	"github.com/prantoran/go-elastic-textsearch/data"
+	"github.com/prantoran/go-elastic-textsearch/utilities"
 )
 
 const (
 	// ElasticURL to connect to, elasticsearch provides a relative urlpath within docker
-	ElasticURL   = "http://elasticsearch:9200"
-	indexName    = "applications"
+	ElasticURL = "http://linkesdb:9200"
+	// ElasticURL   = "elasticsearch://linkesdb:9200" // no es node found
+	indexName    = "yo"
 	docType      = "log"
 	appName      = "myApp"
 	indexMapping = `{
@@ -32,6 +33,7 @@ const (
                     }`
 )
 
+// Log you
 type Log struct {
 	App     string    `json:"app"`
 	Message string    `json:"message"`
@@ -39,114 +41,52 @@ type Log struct {
 }
 
 func main() {
-	err := ESConnect(ElasticURL)
+
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "showenv":
+			log.Printf("Environment")
+			env := os.Environ()
+			sort.Strings(env)
+			for _, e := range env {
+				log.Printf("- %s", e)
+			}
+			os.Exit(0)
+		}
+	}
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
+	cmd := exec.Command("pwd")
+	log.Printf("Running command and waiting for it to finish...")
+	if err := cmd.Run(); err != nil {
+		log.Printf("Command finished with error: %v", err)
+
+	} else {
+		b, _ := cmd.Output()
+		fmt.Printf("shell output: pwd: %v\n", string(b))
+	}
+	cmd = exec.Command("ls", "-lah")
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
+	fmt.Printf("combined out:\n%s\n", string(out))
+	err = data.ESConnect(ElasticURL)
 	if err != nil {
 		log.Println("Connecting ElasticSearch@: ", ElasticURL)
 		log.Fatal("Elasticsearch Error: ", err)
 	} else {
+		log.Println("Connecting ElasticSearch@: ", ElasticURL)
+
 		log.Print("Connected to ELASTIC")
 	}
-	err = createIndexWithLogsIfDoesNotExist(Escon.Client)
-	if err != nil {
-		panic(err)
-	}
+
+	utilities.LaunchESConnectionTest()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello from Docker")
 	})
-
 	fmt.Println("Listening on :6969")
 	log.Fatal(http.ListenAndServe(":6969", nil))
 
-}
-
-func createIndexWithLogsIfDoesNotExist(client *es.Client) error {
-	exists, err := client.IndexExists(indexName).Do(context.Background())
-	if err != nil {
-		return err
-	}
-	fmt.Printf("exists: %v\n", exists)
-
-	if exists {
-		return nil
-	}
-
-	res, err := client.CreateIndex(indexName).
-		Body(indexMapping).
-		Do(context.Background())
-
-	if err != nil {
-		return err
-	}
-	if !res.Acknowledged {
-		return errors.New("CreateIndex was not acknowledged. Check that timeout value is correct")
-	}
-
-	return addLogsToIndex(client)
-}
-
-func addLogsToIndex(client *es.Client) error {
-	for i := 0; i < 10; i++ {
-		l := Log{
-			App:     "myApp",
-			Message: fmt.Sprintf("message %d", i),
-			Time:    time.Now(),
-		}
-
-		_, err := client.Index().
-			Index(indexName).
-			Type(docType).
-			BodyJson(l).
-			Do(context.Background())
-
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func findAndPrintAppLogs(client *es.Client) error {
-	termQuery := es.NewTermQuery("app", appName)
-
-	res, err := client.Search(indexName).
-		Index(indexName).
-		Query(termQuery).
-		Sort("time", true).
-		Do(context.Background())
-
-	if err != nil {
-		return err
-	}
-
-	fmt.Println("Logs found:")
-	var l Log
-	for _, item := range res.Each(reflect.TypeOf(l)) {
-		l := item.(Log)
-		fmt.Printf("time: %s message: %s\n", l.Time, l.Message)
-	}
-
-	return nil
-}
-
-// data: elasticsearch.go
-
-// Escon is the connetion variable
-var Escon ESConnection
-
-// ESConnection represents a connection to elasticsearch
-type ESConnection struct {
-	Client *es.Client
-}
-
-// ESConnect makes a connection with the given URL
-func ESConnect(url string) error {
-	f, _ := os.Create("elastic_search.log")
-	client, err := es.NewClient(es.SetURL(url), es.SetTraceLog(log.New(f, "", 0)), es.SetSniff(false), es.SetHealthcheck(false))
-	if err != nil {
-		return err
-	}
-	Escon = ESConnection{Client: client}
-	return nil
 }
