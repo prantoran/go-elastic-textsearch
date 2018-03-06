@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/prantoran/go-elastic-textsearch/data"
-	"github.com/prantoran/go-elastic-textsearch/utilities"
 )
 
 const (
@@ -125,12 +124,11 @@ func main() {
 		log.Print("Connected to ELASTIC")
 	}
 
-	utilities.LaunchESConnectionTest()
+	// utilities.LaunchESConnectionTest()
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello from Docker")
-	})
+	router := NewRouter()
+
 	fmt.Println("Listening on :6969")
-	log.Fatal(http.ListenAndServe(":6969", nil))
+	log.Fatal(http.ListenAndServe(":6969", router))
 
 }
