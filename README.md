@@ -47,4 +47,6 @@ https://www.elastic.co/guide/en/elasticsearch/reference/5.6/nested.html
 - alias curlpost='curl -H "Content-type: application/json" -X POST -d'
 - curlpost "@body.json" 127.0.0.1:6969/setmap
 - curl 127.0.0.1:6969/indexexists/lawdetails
+- curl 127.0.0.1:6969/deleteindex/lawdetails
+
 

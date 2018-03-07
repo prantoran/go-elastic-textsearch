@@ -40,4 +40,10 @@ var routes = Routes{
 		"/indexexists/{index}",
 		api.IndexExists,
 	},
+	Route{
+		"DeleteIndex",
+		"GET",
+		"/deleteindex/{index}",
+		api.DeleteIndex,
+	},
 }

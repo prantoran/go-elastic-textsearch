@@ -145,12 +145,45 @@ func IndexExists(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("could not connect ot escon\n")
 	}
-	exists, err := data.Escon.Client.IndexExists(index).Do(context.Background())
+	ctx := context.Background()
+	exists, err := data.Escon.Client.IndexExists(index).Do(ctx)
 	res := StatusResponse{}
 	if exists {
 		res.Status = "Index exists"
 	} else {
 		res.Status = "Index does not exist"
+	}
+	ServeJSON(w, res)
+}
+
+// DeleteIndex deletes an index
+func DeleteIndex(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	index, ok := vars["index"]
+	if ok == false {
+		err := data.InvalidIDError{
+			Base: errors.New("ID parameter does not exist"),
+		}
+		ResponseError(w, err)
+		return
+	}
+	err := data.ESConnect(conf.ElasticURL)
+
+	if err != nil {
+		fmt.Printf("could not connect ot escon\n")
+	}
+	res := StatusResponse{}
+
+	ctx := context.Background()
+	deleteIndex, err := data.Escon.Client.DeleteIndex(index).Do(ctx)
+	if err != nil {
+		res.Status = "Error:" + err.Error()
+		ServeJSON(w, res)
+	}
+	if deleteIndex.Acknowledged {
+		res.Status = "Index deleted"
+	} else {
+		res.Status = "Error: Index was not deleted"
 	}
 	ServeJSON(w, res)
 }
