@@ -151,3 +151,62 @@ func GetSingle(w http.ResponseWriter, r *http.Request) {
 		ServeJSON(w, defaultres)
 	}
 }
+
+// DeleteSingle deletes a single record
+func DeleteSingle(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	index, ok := vars["index"]
+	if ok == false {
+		err := data.InvalidIDError{
+			Base: errors.New("ID parameter does not exist"),
+		}
+		ResponseError(w, err)
+		return
+	}
+
+	Mappingtype, ok := vars["type"]
+	if ok == false {
+		err := data.InvalidIDError{
+			Base: errors.New("ID parameter does not exist"),
+		}
+		ResponseError(w, err)
+		return
+	}
+
+	id, ok := vars["id"]
+	if ok == false {
+		err := data.InvalidIDError{
+			Base: errors.New("ID parameter does not exist"),
+		}
+		ResponseError(w, err)
+		return
+	}
+	ctx := context.Background()
+
+	err := data.ESConnect(conf.ElasticURL)
+	res := data.StatusResponse{}
+	if err != nil {
+		res.Status = "Error: " + err.Error()
+		ServeJSON(w, res)
+	}
+	// Delete tweet with specified ID
+	delres, err := data.Escon.Client.Delete().
+		Index(index).
+		Type(Mappingtype).
+		Id(id).
+		Do(ctx)
+	if err != nil {
+		// Handle error
+		res.Status = "Error: " + err.Error()
+		ServeJSON(w, res)
+
+	}
+	if delres.Found {
+		res.Status = fmt.Sprintf("Document with id %v deleted", id)
+
+	} else {
+		res.Status = fmt.Sprintf("Deletion not complete")
+
+	}
+	ServeJSON(w, res)
+}

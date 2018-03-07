@@ -58,4 +58,10 @@ var routes = Routes{
 		"/get/single/{index}/{type}/{id}",
 		api.GetSingle,
 	},
+	Route{
+		"DeleteSingle",
+		"GET",
+		"/delete/single/{index}/{type}/{id}",
+		api.DeleteSingle,
+	},
 }
