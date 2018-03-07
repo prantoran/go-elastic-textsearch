@@ -34,4 +34,10 @@ var routes = Routes{
 			fmt.Fprintf(w, "Hello from Docker")
 		},
 	},
+	Route{
+		"IndexExists",
+		"GET",
+		"/indexexists/{index}",
+		api.IndexExists,
+	},
 }

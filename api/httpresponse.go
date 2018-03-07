@@ -36,3 +36,13 @@ func ServeInternalServerError(w http.ResponseWriter) {
 
 	ServeJSON(w, responseJSON)
 }
+
+// ServeBadRequest send StatusBadRequest to the client
+func ServeBadRequest(w http.ResponseWriter, msg interface{}) {
+	w.WriteHeader(http.StatusBadRequest)
+	responseJSON := map[string]interface{}{
+		"error": msg,
+	}
+
+	ServeJSON(w, responseJSON)
+}

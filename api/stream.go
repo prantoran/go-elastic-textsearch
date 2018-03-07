@@ -3,12 +3,14 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
-	"github.com/prantoran/go-elastic-textsearch/conf"
+	"github.com/prantoran/go-elastic-textsearch/data"
 
-	"git.meghdut.io/meghdut/dataengine/data"
+	"github.com/gorilla/mux"
+	"github.com/prantoran/go-elastic-textsearch/conf"
 )
 
 const (
@@ -82,8 +84,8 @@ type SetMappingRequest struct {
 	Mapping map[string]interface{} `json:"mapping"`
 }
 
-// SetMappingResponse encapsulate simple responses
-type SetMappingResponse struct {
+// StatusResponse encapsulate simple responses
+type StatusResponse struct {
 	Status string `json:"status"`
 }
 
@@ -122,7 +124,33 @@ func SetMapping(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Not Acknowledged\n")
 	}
 
-	res := SetMappingResponse{Status: "ok"}
+	res := StatusResponse{Status: "ok"}
 
+	ServeJSON(w, res)
+}
+
+// IndexExists checks whether index exists
+func IndexExists(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	index, ok := vars["index"]
+	if ok == false {
+		err := data.InvalidIDError{
+			Base: errors.New("ID parameter does not exist"),
+		}
+		ResponseError(w, err)
+		return
+	}
+	err := data.ESConnect(conf.ElasticURL)
+
+	if err != nil {
+		fmt.Printf("could not connect ot escon\n")
+	}
+	exists, err := data.Escon.Client.IndexExists(index).Do(context.Background())
+	res := StatusResponse{}
+	if exists {
+		res.Status = "Index exists"
+	} else {
+		res.Status = "Index does not exist"
+	}
 	ServeJSON(w, res)
 }

@@ -3,6 +3,8 @@ package api
 import (
 	"log"
 	"net/http"
+
+	"github.com/prantoran/go-elastic-textsearch/data"
 )
 
 // ParseError represents a parsing error e.g when parsing json
@@ -20,6 +22,10 @@ func ResponseError(w http.ResponseWriter, err error) {
 	switch err.(type) {
 	case ParseError:
 		ServeInternalServerError(w)
+
+	case data.InvalidIDError:
+		ServeBadRequest(w, err.Error())
+
 	}
 }
 
