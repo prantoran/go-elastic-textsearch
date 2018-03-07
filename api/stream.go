@@ -84,11 +84,6 @@ type SetMappingRequest struct {
 	Mapping map[string]interface{} `json:"mapping"`
 }
 
-// StatusResponse encapsulate simple responses
-type StatusResponse struct {
-	Status string `json:"status"`
-}
-
 // SetMapping sets the default mapping for elasticsearch
 func SetMapping(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("SetMapping reached\n")
@@ -124,7 +119,7 @@ func SetMapping(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Not Acknowledged\n")
 	}
 
-	res := StatusResponse{Status: "ok"}
+	res := data.StatusResponse{Status: "ok"}
 
 	ServeJSON(w, res)
 }
@@ -147,7 +142,7 @@ func IndexExists(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx := context.Background()
 	exists, err := data.Escon.Client.IndexExists(index).Do(ctx)
-	res := StatusResponse{}
+	res := data.StatusResponse{}
 	if exists {
 		res.Status = "Index exists"
 	} else {
@@ -172,7 +167,7 @@ func DeleteIndex(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("could not connect ot escon\n")
 	}
-	res := StatusResponse{}
+	res := data.StatusResponse{}
 
 	ctx := context.Background()
 	deleteIndex, err := data.Escon.Client.DeleteIndex(index).Do(ctx)

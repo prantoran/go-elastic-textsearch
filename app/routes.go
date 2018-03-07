@@ -46,4 +46,10 @@ var routes = Routes{
 		"/deleteindex/{index}",
 		api.DeleteIndex,
 	},
+	Route{
+		"InsertSingle",
+		"POST",
+		"/insert/single/{index}/{type}",
+		api.InsertSingle,
+	},
 }
