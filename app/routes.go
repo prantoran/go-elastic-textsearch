@@ -64,4 +64,10 @@ var routes = Routes{
 		"/delete/single/{index}/{type}/{id}",
 		api.DeleteSingle,
 	},
+	Route{
+		"QuerySearchQuery",
+		"POST",
+		"/search/string/{index}",
+		api.QuerySearchQuery,
+	},
 }
