@@ -21,10 +21,10 @@ type Routes []Route
 
 var routes = Routes{
 	Route{
-		"SetDefaultMapping",
-		"GET",
-		"/setmapping",
-		api.SetDefaultMapping,
+		"SetMapping",
+		"POST",
+		"/setmap",
+		api.SetMapping,
 	},
 	Route{
 		"HelloWorld",

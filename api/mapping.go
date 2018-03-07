@@ -1,19 +1,10 @@
 package api
 
-import (
-	"fmt"
-	"net/http"
-)
-
-// DefaultResponse encapsulate simple responses
-type DefaultResponse struct {
-	Status string `json:"status"`
+type MappingAttribute struct {
+	Field string `json:"field"`
+	Kind  string `json:"kind"`
 }
 
-// SetDefaultMapping sets the default mapping for elasticsearch
-func SetDefaultMapping(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("SetDefaultMapping reached\n")
-	res := DefaultResponse{Status: "ok"}
-
-	ServeJSON(w, res)
+type StreamMapping struct {
+	Attributes []MappingAttribute `json:"attributes"`
 }
