@@ -52,4 +52,10 @@ var routes = Routes{
 		"/insert/single/{index}/{type}",
 		api.InsertSingle,
 	},
+	Route{
+		"GetSingle",
+		"GET",
+		"/get/single/{index}/{type}/{id}",
+		api.GetSingle,
+	},
 }

@@ -12,31 +12,6 @@ import (
 	"github.com/prantoran/go-elastic-textsearch/data"
 )
 
-// Section represents a single law section
-type Section struct {
-	Detail string `json:"detail"`
-	ID     int    `json:"id"`
-	Title  string `json:"title"`
-}
-
-// Ammendment represents a single law ammendment
-type Ammendment struct {
-	Ammendment string   `json:"ammendment"`
-	Atags      []string `json:"atags,omitempty"`
-	ID         int      `json:"id"`
-}
-
-// SingleInsertRequest encapsulates the generic structure of single law record
-type SingleInsertRequest struct {
-	CreatedAt   string       `json:"created_at,omitempty"`
-	Sections    []Section    `json:"sections,omitempty"`
-	Ammendments []Ammendment `json:"ammendments,omitempty"`
-	Act         string       `json:"act,omitempty"`
-	ID          string       `json:"id"`
-	Preamble    []string     `json:"preamble,omitempty"`
-	Title       string       `json:"title,omitempty"`
-}
-
 // InsertSingle inserts a single document
 func InsertSingle(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -59,7 +34,7 @@ func InsertSingle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("InsertSingle()\n")
-	req := SingleInsertRequest{}
+	req := data.LawDocument{}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		parseErr := ParseError{
@@ -99,4 +74,80 @@ func InsertSingle(w http.ResponseWriter, r *http.Request) {
 	res.Status = fmt.Sprintf("Inserted law with id: %v", req.ID)
 	ServeJSON(w, res)
 
+}
+
+// GetSingle retrieves a single record
+func GetSingle(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	index, ok := vars["index"]
+	if ok == false {
+		err := data.InvalidIDError{
+			Base: errors.New("ID parameter does not exist"),
+		}
+		ResponseError(w, err)
+		return
+	}
+
+	Mappingtype, ok := vars["type"]
+	if ok == false {
+		err := data.InvalidIDError{
+			Base: errors.New("ID parameter does not exist"),
+		}
+		ResponseError(w, err)
+		return
+	}
+
+	id, ok := vars["id"]
+	if ok == false {
+		err := data.InvalidIDError{
+			Base: errors.New("ID parameter does not exist"),
+		}
+		ResponseError(w, err)
+		return
+	}
+
+	ctx := context.Background()
+
+	err := data.ESConnect(conf.ElasticURL)
+
+	fmt.Printf("escon err: %v\n", err)
+	defaultres := data.StatusResponse{}
+	if err != nil {
+		defaultres.Status = "could not connect ot escon\n"
+		ServeJSON(w, defaultres)
+	}
+
+	get1, err := data.Escon.Client.Get().
+		Index(index).
+		Type(Mappingtype).
+		Id(id).
+		Do(ctx)
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	if get1.Found {
+		bytes, err := json.Marshal(get1.Source)
+		if err != nil {
+			defaultres.Status = err.Error()
+			ServeJSON(w, defaultres)
+
+		}
+		fmt.Printf("Got document %s in version %d from index %s, type %s\nUID: %v\nrouting: %v\nParent: %v\n\nsource: %v\n\nfields: %v\\n",
+			get1.Id, get1.Version, get1.Index, get1.Type, get1.Uid, get1.Routing, get1.Parent, string(bytes), get1.Fields)
+		res := data.LawDocument{}
+		err = json.Unmarshal(bytes, &res)
+		if err != nil {
+			defaultres.Status = err.Error()
+			ServeJSON(w, defaultres)
+
+		}
+		ServeJSON(w, res)
+
+	} else {
+		fmt.Printf("Document not found\n")
+
+		defaultres.Status = "Document not found"
+		ServeJSON(w, defaultres)
+	}
 }
