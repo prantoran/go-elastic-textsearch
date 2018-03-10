@@ -48,8 +48,8 @@ https://www.elastic.co/guide/en/elasticsearch/reference/5.6/nested.html
 - curlpost "@body.json" 127.0.0.1:6969/setmap
 - curl 127.0.0.1:6969/indexexists/laws
 - curl 127.0.0.1:6969/deleteindex/laws
-- curl 127.0.0.1:9200/laws
+- curl 127.0.0.1:9200/laws | json_pp
 - curlpost "@body1.json" 127.0.0.1:6969/insert/single/laws/details
 - curl 127.0.0.1:6969/get/single/laws/details/380
 - curl 127.0.0.1:6969/delete/single/laws/details/380
-- curlpost "@body2.json" 127.0.0.1:6969/search/term/laws
+- curlpost "@body2.json" 127.0.0.1:6969/search/string/laws

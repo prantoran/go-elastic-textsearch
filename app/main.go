@@ -42,6 +42,6 @@ func main() {
 	router := NewRouter()
 
 	fmt.Println("Listening on :6969")
-	log.Fatal(http.ListenAndServe(":6968", router))
+	log.Fatal(http.ListenAndServe(":6969", router))
 
 }
