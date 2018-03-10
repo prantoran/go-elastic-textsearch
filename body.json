@@ -1,0 +1,58 @@
+{
+    "index": "laws",
+    "mapping": {
+                        "mappings" : {
+                            "details" : {
+                                "properties" : {
+									"created_at": {
+										"type": "string",
+										"index" : "not_analyzed"
+									},
+									"sections": {
+										"type": "nested",
+										"properties": {
+											"details": {
+												"type": "string",
+												"index": "analyzed"
+											},
+											"id": {
+												"type": "integer"
+											},
+											"title": {
+												"type": "string",
+												"index": "analyzed"
+											}
+										}
+									},
+									"ammendments": {
+										"type": "nested",
+										"properties": {
+											"ammendment": {
+												"type": "string",
+												"index": "analyzed"
+											},
+											"atags": {
+												"type": "string"
+											}
+										}
+									},
+									"act": {
+										"type": "string",
+										"index": "not_analyzed"
+									},
+									"id": {
+										"type": "string",
+										"index": "not_analyzed"
+									},
+									"preamble": {
+										"type": "string"
+									},
+									"title": {
+										"type": "string",
+										"index": "analyzed"
+									} 
+                                }
+                            }
+                        }
+                    }
+}

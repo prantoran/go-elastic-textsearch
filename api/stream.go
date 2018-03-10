@@ -13,68 +13,11 @@ import (
 	"github.com/prantoran/go-elastic-textsearch/conf"
 )
 
-const (
-	indexMapping = `"mappings" : {
-                            "law_details" : {
-                                "properties" : {
-									"created_at": {
-										"type": "string",
-										"index" : "not_analyzed"
-									},
-									"sections": {
-										"type": "nested",
-										"properties": {
-											"details": {
-												"type": "string",
-												"index": "analyzed"
-											},
-											"id": {
-												"type": "integer"
-											},
-											"title": {
-												"type": "string",
-												"index": "analyzed"
-											}
-										}
-									},
-									"ammendments": {
-										"type": "nested",
-										"properties": {
-											"ammendment": {
-												"type": "string",
-												"index": "analyzed"
-											},
-											"atags": {
-												"type": "nested"
-											}
-										}
-									},
-									"act": {
-										"type": "string",
-										"index": "not_analyzed"
-									},
-									"id": {
-										"type": "string",
-										"index": "not_analyzed"
-									},
-									"preamble": {
-										"type": "nested"
-									},
-									"title": {
-										"type": "string",
-										"index": "analyzed"
-									} 
-                                }
-                            }
-                        }
-                    }`
-)
-
+// Stream represents index of ES
 type Stream struct {
-	ID           string        `json:"id"`
-	Name         string        `json:"name"`
-	TimestampKey string        `json:"timestamp_key"`
-	Mappings     StreamMapping `json:"mappings"`
+	ID           string `json:"id"`
+	Name         string `json:"name"`
+	TimestampKey string `json:"timestamp_key"`
 }
 
 // SetMappingRequest represents the request body
@@ -86,7 +29,6 @@ type SetMappingRequest struct {
 
 // SetMapping sets the default mapping for elasticsearch
 func SetMapping(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("SetMapping reached\n")
 	req := SetMappingRequest{}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -96,11 +38,8 @@ func SetMapping(w http.ResponseWriter, r *http.Request) {
 		ResponseError(w, parseErr)
 		return
 	}
-	fmt.Printf("Index: %v Type: %v Mapping:\n%v\n", req.Index, req.Type, req.Mapping)
-	fmt.Printf("mappings type: %T\n", req.Mapping)
 
 	ctx := context.Background()
-	fmt.Printf("defmap type: %T \n", indexMapping)
 
 	err := data.ESConnect(conf.ElasticURL)
 

@@ -1,0 +1,15 @@
+{
+    "query": {
+        "nested" : {
+            "path" : "ammendments",
+            "score_mode" : "avg",
+            "query" : {
+                "bool" : {
+                    "must" : [
+                    { "match" : {"ammendments.ammendment" : "1972"} }
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -52,4 +52,7 @@ https://www.elastic.co/guide/en/elasticsearch/reference/5.6/nested.html
 - curlpost "@body1.json" 127.0.0.1:6969/insert/single/laws/details
 - curl 127.0.0.1:6969/get/single/laws/details/380
 - curl 127.0.0.1:6969/delete/single/laws/details/380
-- curlpost "@body2.json" 127.0.0.1:6969/search/string/laws
+- curlpost "@body2.json" 127.0.0.1:6969/search/phrase/laws | json_pp
+
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-completion.html

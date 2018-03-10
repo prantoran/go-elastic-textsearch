@@ -67,7 +67,7 @@ var routes = Routes{
 	Route{
 		"QuerySearchQuery",
 		"POST",
-		"/search/string/{index}",
+		"/search/phrase/{index}",
 		api.QuerySearchQuery,
 	},
 }
