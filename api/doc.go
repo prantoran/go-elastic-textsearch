@@ -6,11 +6,91 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
+
+	elastic "gopkg.in/olivere/elastic.v5"
 
 	"github.com/gorilla/mux"
 	"github.com/prantoran/go-elastic-textsearch/conf"
 	"github.com/prantoran/go-elastic-textsearch/data"
 )
+
+// InsertBulk inserts records from request body in bulk
+// using ES's Bulk Processor
+func InsertBulk(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	index, ok := vars["index"]
+	if ok == false {
+		err := data.InvalidIDError{
+			Base: errors.New("ID parameter does not exist"),
+		}
+		ResponseError(w, err)
+		return
+	}
+
+	mappingtype, ok := vars["type"]
+	if ok == false {
+		err := data.InvalidIDError{
+			Base: errors.New("ID parameter does not exist"),
+		}
+		ResponseError(w, err)
+		return
+	}
+
+	fmt.Printf("EnterBulk()\n")
+
+	res := data.StatusResponse{}
+
+	err := data.ESConnect(conf.ElasticURL)
+
+	fmt.Printf("escon err: %v\n", err)
+
+	if err != nil {
+		res.Status = "could not connect ot escon\n"
+		ServeJSON(w, res)
+	}
+
+	ctx := context.Background()
+
+	p, err := data.Escon.Client.BulkProcessor().
+		Name("MyBackgroundWorker-1").
+		Workers(2).
+		BulkActions(1000).               // commit if # requests >= 1000
+		BulkSize(2 << 20).               // commit if size of requests >= 2 MB
+		FlushInterval(30 * time.Second). // commit every 30s
+		Do(ctx)
+
+	if err != nil {
+	}
+
+	// ... Do some work here
+
+	req := []data.LawDocument{}
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		parseErr := ParseError{
+			Base: err,
+		}
+		ResponseError(w, parseErr)
+		return
+	}
+
+	for _, u := range req {
+		fmt.Printf("ID: %v Title: %v\n", u.ID, u.Title)
+		r := elastic.NewBulkIndexRequest().Index(index).Type(mappingtype).Id(u.ID).Doc(u)
+		p.Add(r)
+	}
+	fmt.Printf("passed\n")
+	// Stop the bulk processor and do some cleanup
+	err = p.Close()
+	if err != nil {
+		fmt.Printf("pclose: %v\n", err)
+	}
+
+	res.Status = fmt.Sprintf("Inserted law with id: %v", req[0].ID)
+	ServeJSON(w, res)
+
+}
 
 // InsertSingle inserts a single document
 func InsertSingle(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +104,7 @@ func InsertSingle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Mappingtype, ok := vars["type"]
+	mappingtype, ok := vars["type"]
 	if ok == false {
 		err := data.InvalidIDError{
 			Base: errors.New("ID parameter does not exist"),
@@ -62,7 +142,7 @@ func InsertSingle(w http.ResponseWriter, r *http.Request) {
 
 	put1, err := data.Escon.Client.Index().
 		Index(index).
-		Type(Mappingtype).
+		Type(mappingtype).
 		Id(req.ID).
 		BodyJson(req).
 		Do(ctx)
@@ -88,7 +168,7 @@ func GetSingle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Mappingtype, ok := vars["type"]
+	mappingtype, ok := vars["type"]
 	if ok == false {
 		err := data.InvalidIDError{
 			Base: errors.New("ID parameter does not exist"),
@@ -119,7 +199,7 @@ func GetSingle(w http.ResponseWriter, r *http.Request) {
 
 	get1, err := data.Escon.Client.Get().
 		Index(index).
-		Type(Mappingtype).
+		Type(mappingtype).
 		Id(id).
 		Do(ctx)
 	if err != nil {
@@ -164,7 +244,7 @@ func DeleteSingle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Mappingtype, ok := vars["type"]
+	mappingtype, ok := vars["type"]
 	if ok == false {
 		err := data.InvalidIDError{
 			Base: errors.New("ID parameter does not exist"),
@@ -192,7 +272,7 @@ func DeleteSingle(w http.ResponseWriter, r *http.Request) {
 	// Delete tweet with specified ID
 	delres, err := data.Escon.Client.Delete().
 		Index(index).
-		Type(Mappingtype).
+		Type(mappingtype).
 		Id(id).
 		Do(ctx)
 	if err != nil {

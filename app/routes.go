@@ -53,6 +53,12 @@ var routes = Routes{
 		api.InsertSingle,
 	},
 	Route{
+		"InsertBulk",
+		"POST",
+		"/insert/bulk/{index}/{type}",
+		api.InsertBulk,
+	},
+	Route{
 		"GetSingle",
 		"GET",
 		"/get/single/{index}/{type}/{id}",

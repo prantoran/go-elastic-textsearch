@@ -1,31 +1,119 @@
-{
-  "created_at": "26th March, 1972",
-  "sections": [
-    {
-      "detail": "1. (1) This Order March, 1971.",
-      "id": 1,
-      "title": "1"
-    },
-    {
-      "detail": "2. (1) Notwithestion in any Court.",
-      "id": 2,
-      "title": "2"
-    }
-  ],
-  "ammendments": [
-    {
-      "ammendment": "[1] The es 134 of 1972)",
-      "atags": [
-        "<a href=\"pdfendment) Order</a>"
-      ],
-      "id": 1
-    }
-  ],
-  "act": "Vesting of Property and Assets",
-  "id": "380",
-  "preamble": [
-    "WHEREAS it ladesh;",
-    "NOW, THEwing Order:-"
-  ],
-  "title": "Bangler, 1972 . "
-}
+[
+  {
+    "created_at": "4th April, 1850",
+    "sections": [
+      {
+        "detail": "1. No Judge, Magistrate, Justice of the Peace, Collector or other person acting judicially shall be liable to be sued in any Civil Court for any act done or ordered to be done by him in the discharge of his judicial duty, whether or not within the limits of his jurisdiction: Provided that he at the time, in good faith, believed himself to have jurisdiction to do or order the act complained of; and no officer of any Court or other person, bound to execute the lawful warrants or orders of any such Judge, Magistrate, Justice of the Peace, Collector or other person acting judicially shall be liable to be sued in any Civil Court, for the execution of any warrant or order, which he would be bound to execute, if within the jurisdiction of the person issuing the same.",
+        "id": 1,
+        "title": "Non-liability to suit of officers acting judicially, for official acts done in good faith, and of officers executing warrants and orders"
+      }
+    ],
+    "ammendments": [],
+    "act": "Act No. XVIII of 1850",
+    "id": "3",
+    "preamble": [
+      "An Act for the protection of Judicial Officers.",
+      "FOR the greater protection of Magistrates and others acting judicially; It is enacted as follows:-"
+    ],
+    "title": "Judicial Officer’s Protection Act, 1850 ."
+  },
+  {
+    "created_at": "27th March, 1855",
+    "sections": [
+      {
+        "detail": "1. An action may be maintained by the executors, administrators or representatives of any person deceased for any wrong committed in the time of such person, which has occasioned pecuniary loss to his estate, for which wrong an action might have been maintained by such person, so as such wrong shall have been committed within one year before his death; and the damages, when recovered, shall be part of the personal estate of such person: and further, an action may be maintained against the executors or administrators or heirs or representatives of any person deceased for any wrong committed by him in his lifetime for which he would have been subject to an action, so as such wrong shall have been committed within one year before such person's death; and the damages to be recovered in such action shall, if recovered against an executor or administrator bound to administer according to the English law, be payable in like order of administration as the simple contract debts of such person.",
+        "id": 1,
+        "title": "Executors may sue and be sued in certain cases for wrongs committed in life-time of deceased"
+      },
+      {
+        "detail": "2. No action commenced under the provisions of this Act shall abate by reason of the death of either party, but the same may be continued by or against the executors, administrators or representatives of the party deceased: Provided that, in any case in which any such action shall be continued against the executors, administrators or representatives of a deceased party, such executors, administrators or representatives may set up a want of assets as a defence to the action, either wholly or in part, in the same manner as if the action had been originally commenced against them.",
+        "id": 2,
+        "title": "Death of either party not to abate suit"
+      }
+    ],
+    "ammendments": [],
+    "act": "Act No. XII of 1855",
+    "id": "6",
+    "preamble": [
+      "An Act to enable Executors, Administrators or Represen-tatives to sue and be sued for certain wrongs.",
+      "WHEREAS it is expedient to enable executors, administrators or representatives in certain cases to sue and be sued in respect of certain wrongs which, according to the present law, do not survive to or against such executors, administrators or representatives; It is enacted hereby as follows:-"
+    ],
+    "title": "Legal Representative Suits Act, 1855 . "
+  },
+  {
+    "created_at": "27th March, 1855",
+    "sections": [
+      {
+        "detail": "1. Whenever the death of a person shall be caused by wrongful act, neglect or default, and the act, neglect or default is such as would (if death had not ensued) have entitled the party injured to maintain an action and recover damages in respect thereof, the party who would have been liable if death had not ensued shall be liable to an action or suit for damages, notwithstanding the death of the person injured, and although the death shall have been caused under such circumstances as amount in law to felony or other crime. Every such action or suit shall be for the benefit of the wife, husband, parent and child, if any, of the person whose death shall have been so caused, and shall be brought by and in the name of the executor, administrator or representative of the person deceased; and in every such action the Court may give such damages as it may think proportioned to the loss resulting from such death to the parties respectively, for whom and for whose benefit such action shall be brought; and the amount so recovered, after deducting all costs and expenses, including the costs not recovered from the defendant, shall be divided amongst the before mentioned parties, or any of them, in such shares as the Court by its judgment or decree shall direct.",
+        "id": 1,
+        "title": "Suit for compensation to the family of a person for loss occasioned to it by his death by actionable wrong"
+      },
+      {
+        "detail": "2. Provided always that not more than one action or suit shall be brought for, and in respect of the same subject-matter of complaint: Provided that, in any such action or suit, the executor, administrator or representative of the deceased may insert a claim for and recover any pecuniary loss to the estate of the deceased occasioned by such wrongful act, neglect or default, which sum, when recovered, shall be deemed part of the assets of the estate of the deceased.",
+        "id": 2,
+        "title": "Not more than one suit to be broughtClaim for loss to estate may be added"
+      },
+      {
+        "detail": "3. The plaint in any such action or suit shall give a full particular of the person or persons whom, or on whose behalf, such action or suit shall be brought, and of the nature of the claim in respect of which damages shall be sought to be recovered.",
+        "id": 3,
+        "title": "Plaintiff shall deliver particulars, etc"
+      },
+      {
+        "detail": "4. The following words and expressions are intended to have the meanings hereby assigned to them respectively, so far as such meanings are not excluded by the context or by the nature of the subject-matter; that is to say the word \"person\" shall apply to bodies politic and corporate; and the word \"parent\" shall include father and mother and grand-father and grand-mother; and the word \"child\" shall include son and daughter and grand-son and grand-daughter and step-son and step-daughter.",
+        "id": 4,
+        "title": "Interpretation clause"
+      }
+    ],
+    "ammendments": [],
+    "act": "Act No. XIII of 1855",
+    "id": "7",
+    "preamble": [
+      "An Act to provide compensation to families for loss occasioned by the death of a person caused by actionable wrong.",
+      "WHEREAS no action or suit is now maintainable in any Court against a person who, by his wrongful act, neglect or default, may have caused the death of another person, and it is often-times right and expedient that the wrong doer in such case should be answerable in damages for the injury so caused by him; It is enacted as follows:-"
+    ],
+    "title": "Fatal Accidents Act, 1855 . "
+  },
+  {
+    "created_at": "22nd March, 1850",
+    "sections": [
+      {
+        "detail": "1. Every public accountant shall give security for the due discharge of the trusts of his office, and for the due account of all moneys which shall come into his possession or control, by reason of his office.",
+        "id": 1,
+        "title": "Public Accountants to give security"
+      },
+      {
+        "detail": "2. In default of any Act having special reference to the office of any public accountant, the security given shall be of such amount and kind, real or personal, or both, and with such sureties (regard being had to the nature of the office), as shall be required by any rules made or to be made from time to time, by the authority by which each public accountant is appointed to his office.",
+        "id": 2,
+        "title": "Amount and kind of security, and with what sureties"
+      },
+      {
+        "detail": "3. For the purposes of sections 1 and 2 of this Act, the expression “public accountant” means any person who as Official Assignee or Trustee, or as sarbarahkar, is entrusted with the receipt, custody or control of any moneys or securities for money, or the management of any lands belonging to any other person or persons; and for the purposes of sections 4 and 5 of this Act the expression shall also include any person who, by reason of any office held by him in the service of the State is entrusted with the receipt, custody or control of any moneys or securities for money, or the management of any lands belonging to the Government.",
+        "id": 3,
+        "title": "“Public accountant” defined"
+      },
+      {
+        "detail": "4. The person or persons at the head of the office to which any public accountant belongs may proceed against any such public accountant and his securities for any loss or defalcation in his accounts, as if the amount thereof were an arrear of land-revenue due to Government.",
+        "id": 4,
+        "title": "Prosecution of accountants and sureties"
+      },
+      {
+        "detail": "5. All Regulations and Acts now or hereafter to be in force for the recovery of arrears of land-revenue due to Government, and for recovery of damages by any person wrongfully proceeded against for any such arrear shall apply, with such changes in the forms of procedure as are necessary to make them applicable to the case, to the proceedings against and by such public accountant.",
+        "id": 5,
+        "title": "Enactments applied to proceedings by and against accountants"
+      },
+      {
+        "detail": "6. [Repealed by the Repealing Act, 1870 (Act No. XIV of 1870).]",
+        "id": 6,
+        "title": "[Repealed]"
+      }
+    ],
+    "ammendments": [],
+    "act": "ACT NO. XII OF 1850",
+    "id": "2",
+    "preamble": [
+      "For avoiding loss by the default of Public Accountants.",
+      "For better avoidance of loss through the default of public accountants; It is enacted as follows:-"
+    ],
+    "title": "PUBLIC ACCOUNTANTS’ DEFAULT ACT, 1850 ."
+  }
+]

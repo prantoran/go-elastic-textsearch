@@ -50,9 +50,20 @@ https://www.elastic.co/guide/en/elasticsearch/reference/5.6/nested.html
 - curl 127.0.0.1:6969/deleteindex/laws
 - curl 127.0.0.1:9200/laws | json_pp
 - curlpost "@body1.json" 127.0.0.1:6969/insert/single/laws/details
+- curlpost "@body1.json" 127.0.0.1:6969/insert/bulk/laws/details
 - curl 127.0.0.1:6969/get/single/laws/details/380
 - curl 127.0.0.1:6969/delete/single/laws/details/380
 - curlpost "@body2.json" 127.0.0.1:6969/search/phrase/laws | json_pp
 
 
 https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-completion.html
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-inner-hits.html
+
+https://github.com/olivere/elastic/blob/release-branch.v6/search_queries_nested_test.go
+
+https://www.elastic.co/guide/en/elasticsearch/guide/current/nested-query.html
+
+https://medium.com/@rdsubhas/docker-for-development-common-problems-and-solutions-95b25cae41eb
