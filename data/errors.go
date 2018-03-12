@@ -17,3 +17,12 @@ type InvalidIDError struct {
 func (e InvalidIDError) Error() string {
 	return e.Base.Error()
 }
+
+// ESError represents a parsing error e.g when parsing json
+type ESError struct {
+	Base error
+}
+
+func (e ESError) Error() string {
+	return e.Base.Error()
+}

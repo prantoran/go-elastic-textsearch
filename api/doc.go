@@ -190,11 +190,12 @@ func GetSingle(w http.ResponseWriter, r *http.Request) {
 
 	err := data.ESConnect(conf.ElasticURL)
 
-	fmt.Printf("escon err: %v\n", err)
-	defaultres := data.StatusResponse{}
 	if err != nil {
-		defaultres.Status = "could not connect ot escon\n"
-		ServeJSON(w, defaultres)
+		err := data.ESError{
+			Base: errors.New("Could not connect to ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
 
 	get1, err := data.Escon.Client.Get().
@@ -203,32 +204,39 @@ func GetSingle(w http.ResponseWriter, r *http.Request) {
 		Id(id).
 		Do(ctx)
 	if err != nil {
-		// Handle error
-		panic(err)
+		err := data.ESError{
+			Base: errors.New("Could not get document from ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
 	if get1.Found {
 		bytes, err := json.Marshal(get1.Source)
 		if err != nil {
-			defaultres.Status = err.Error()
-			ServeJSON(w, defaultres)
+			err := ParseError{
+				Base: errors.New("Could not marshal response source"),
+			}
+			ResponseError(w, err)
 
 		}
-		fmt.Printf("Got document %s in version %d from index %s, type %s\nUID: %v\nrouting: %v\nParent: %v\n\nsource: %v\n\nfields: %v\\n",
-			get1.Id, get1.Version, get1.Index, get1.Type, get1.Uid, get1.Routing, get1.Parent, string(bytes), get1.Fields)
+
 		res := data.LawDocument{}
 		err = json.Unmarshal(bytes, &res)
 		if err != nil {
-			defaultres.Status = err.Error()
-			ServeJSON(w, defaultres)
+			err := ParseError{
+				Base: errors.New("Could not unmarshal bytes to struct"),
+			}
+			ResponseError(w, err)
 
 		}
 		ServeJSON(w, res)
 
 	} else {
-		fmt.Printf("Document not found\n")
 
-		defaultres.Status = "Document not found"
-		ServeJSON(w, defaultres)
+		err := NotFoundError{
+			Base: errors.New("Document not found"),
+		}
+		ResponseError(w, err)
 	}
 }
 
