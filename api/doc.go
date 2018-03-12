@@ -42,8 +42,11 @@ func InsertBulk(w http.ResponseWriter, r *http.Request) {
 	err := data.ESConnect(conf.ElasticURL)
 
 	if err != nil {
-		res.Status = "could not connect ot escon\n"
-		ServeJSON(w, res)
+		err := data.ESError{
+			Base: errors.New("Could not connect to ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
 
 	ctx := context.Background()
@@ -57,6 +60,11 @@ func InsertBulk(w http.ResponseWriter, r *http.Request) {
 		Do(ctx)
 
 	if err != nil {
+		err := data.ESError{
+			Base: errors.New("Could not create ES bulk processor"),
+		}
+		ResponseError(w, err)
+		return
 	}
 
 	// ... Do some work here
@@ -78,6 +86,11 @@ func InsertBulk(w http.ResponseWriter, r *http.Request) {
 	// Stop the bulk processor and do some cleanup
 	err = p.Close()
 	if err != nil {
+		err := data.ESError{
+			Base: errors.New("Could not close ES bulk processor"),
+		}
+		ResponseError(w, err)
+		return
 	}
 	ServeJSON(w, res)
 }
@@ -113,13 +126,14 @@ func InsertSingle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := data.StatusResponse{}
-
 	err := data.ESConnect(conf.ElasticURL)
 
 	if err != nil {
-		res.Status = "could not connect ot escon\n"
-		ServeJSON(w, res)
+		err := data.ESError{
+			Base: errors.New("Could not connect to ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
 
 	ctx := context.Background()
@@ -131,11 +145,15 @@ func InsertSingle(w http.ResponseWriter, r *http.Request) {
 		BodyJson(req).
 		Do(ctx)
 	if err != nil {
-		// Handle error
-		panic(err)
+		err := data.ESError{
+			Base: errors.New("Could not index document to ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
-	res.Status = fmt.Sprintf("Inserted law with id: %v", put1.Id)
-	ServeJSON(w, res)
+	ServeJSON(w, data.StatusResponse{
+		Status: fmt.Sprintf("Inserted law with id: %v", put1.Id),
+	})
 
 }
 
@@ -255,29 +273,36 @@ func DeleteSingle(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	err := data.ESConnect(conf.ElasticURL)
-	res := data.StatusResponse{}
 	if err != nil {
-		res.Status = "Error: " + err.Error()
-		ServeJSON(w, res)
+		err := data.ESError{
+			Base: errors.New("Could not connect to ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
 	// Delete tweet with specified ID
-	delres, err := data.Escon.Client.Delete().
+	del, err := data.Escon.Client.Delete().
 		Index(index).
 		Type(mappingtype).
 		Id(id).
 		Do(ctx)
 	if err != nil {
-		// Handle error
-		res.Status = "Error: " + err.Error()
-		ServeJSON(w, res)
-
+		err := data.ESError{
+			Base: errors.New("Could not delete document from ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
-	if delres.Found {
-		res.Status = fmt.Sprintf("Document with id %v deleted", id)
 
-	} else {
-		res.Status = fmt.Sprintf("Deletion not complete")
-
+	if !del.Found {
+		err := NotFoundError{
+			Base: errors.New("Document not found"),
+		}
+		ResponseError(w, err)
+		return
 	}
-	ServeJSON(w, res)
+
+	ServeJSON(w, data.StatusResponse{
+		Status: fmt.Sprintf("Document with id %v deleted", id),
+	})
 }
