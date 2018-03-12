@@ -37,13 +37,9 @@ func InsertBulk(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("EnterBulk()\n")
-
 	res := data.StatusResponse{}
 
 	err := data.ESConnect(conf.ElasticURL)
-
-	fmt.Printf("escon err: %v\n", err)
 
 	if err != nil {
 		res.Status = "could not connect ot escon\n"
@@ -76,20 +72,14 @@ func InsertBulk(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, u := range req {
-		fmt.Printf("ID: %v Title: %v\n", u.ID, u.Title)
 		r := elastic.NewBulkIndexRequest().Index(index).Type(mappingtype).Id(u.ID).Doc(u)
 		p.Add(r)
 	}
-	fmt.Printf("passed\n")
 	// Stop the bulk processor and do some cleanup
 	err = p.Close()
 	if err != nil {
-		fmt.Printf("pclose: %v\n", err)
 	}
-
-	res.Status = fmt.Sprintf("Inserted law with id: %v", req[0].ID)
 	ServeJSON(w, res)
-
 }
 
 // InsertSingle inserts a single document
@@ -113,7 +103,6 @@ func InsertSingle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("InsertSingle()\n")
 	req := data.LawDocument{}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -124,14 +113,9 @@ func InsertSingle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("CreatedAt: %v\nSections: %v\nAmmendments: %v\nAct: %v\nID: %v\nPreamble: %v\nTitle: %v\n",
-		req.CreatedAt, req.Sections, req.Ammendments, req.Act, req.ID, req.Preamble, req.Title)
-
 	res := data.StatusResponse{}
 
 	err := data.ESConnect(conf.ElasticURL)
-
-	fmt.Printf("escon err: %v\n", err)
 
 	if err != nil {
 		res.Status = "could not connect ot escon\n"
@@ -150,8 +134,7 @@ func InsertSingle(w http.ResponseWriter, r *http.Request) {
 		// Handle error
 		panic(err)
 	}
-	fmt.Printf("Indexed tweet %s to index %s, type %s\n", put1.Id, put1.Index, put1.Type)
-	res.Status = fmt.Sprintf("Inserted law with id: %v", req.ID)
+	res.Status = fmt.Sprintf("Inserted law with id: %v", put1.Id)
 	ServeJSON(w, res)
 
 }

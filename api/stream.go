@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/prantoran/go-elastic-textsearch/data"
@@ -44,10 +43,8 @@ func SetMapping(w http.ResponseWriter, r *http.Request) {
 	err := data.ESConnect(conf.ElasticURL)
 
 	if err != nil {
-		fmt.Printf("could not connect ot escon\n")
 	}
 
-	fmt.Printf("Escon: %v\n", data.Escon)
 	createIndex, err := data.Escon.Client.CreateIndex(req.Index).BodyJson(req.Mapping).Do(ctx)
 	if err != nil {
 		// Handle error
@@ -55,7 +52,6 @@ func SetMapping(w http.ResponseWriter, r *http.Request) {
 	}
 	if !createIndex.Acknowledged {
 		// Not acknowledged
-		fmt.Printf("Not Acknowledged\n")
 	}
 
 	res := data.StatusResponse{Status: "ok"}
@@ -77,7 +73,6 @@ func IndexExists(w http.ResponseWriter, r *http.Request) {
 	err := data.ESConnect(conf.ElasticURL)
 
 	if err != nil {
-		fmt.Printf("could not connect ot escon\n")
 	}
 	ctx := context.Background()
 	exists, err := data.Escon.Client.IndexExists(index).Do(ctx)
@@ -104,7 +99,6 @@ func DeleteIndex(w http.ResponseWriter, r *http.Request) {
 	err := data.ESConnect(conf.ElasticURL)
 
 	if err != nil {
-		fmt.Printf("could not connect ot escon\n")
 	}
 	res := data.StatusResponse{}
 
