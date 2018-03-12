@@ -43,20 +43,30 @@ func SetMapping(w http.ResponseWriter, r *http.Request) {
 	err := data.ESConnect(conf.ElasticURL)
 
 	if err != nil {
+		err := data.ESError{
+			Base: errors.New("Could not connect to ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
 
 	createIndex, err := data.Escon.Client.CreateIndex(req.Index).BodyJson(req.Mapping).Do(ctx)
 	if err != nil {
-		// Handle error
-		panic(err)
+		err := data.ESError{
+			Base: errors.New("Could not create index in ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
 	if !createIndex.Acknowledged {
-		// Not acknowledged
+		err := data.ESError{
+			Base: errors.New("Creating index in ES not acknoledged"),
+		}
+		ResponseError(w, err)
+		return
 	}
 
-	res := data.StatusResponse{Status: "ok"}
-
-	ServeJSON(w, res)
+	ServeJSON(w, data.StatusResponse{Status: "Index created"})
 }
 
 // IndexExists checks whether index exists
@@ -73,16 +83,29 @@ func IndexExists(w http.ResponseWriter, r *http.Request) {
 	err := data.ESConnect(conf.ElasticURL)
 
 	if err != nil {
+		err := data.ESError{
+			Base: errors.New("Could not connect to ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
 	ctx := context.Background()
 	exists, err := data.Escon.Client.IndexExists(index).Do(ctx)
-	res := data.StatusResponse{}
-	if exists {
-		res.Status = "Index exists"
-	} else {
-		res.Status = "Index does not exist"
+	if err != nil {
+		err := data.ESError{
+			Base: errors.New("Could not check whether index exists"),
+		}
+		ResponseError(w, err)
+		return
 	}
-	ServeJSON(w, res)
+
+	if !exists {
+		err := NotFoundError{
+			Base: errors.New("Document not found"),
+		}
+		ResponseError(w, err)
+	}
+	ServeJSON(w, data.StatusResponse{Status: "Index Exists"})
 }
 
 // DeleteIndex deletes an index
@@ -99,19 +122,29 @@ func DeleteIndex(w http.ResponseWriter, r *http.Request) {
 	err := data.ESConnect(conf.ElasticURL)
 
 	if err != nil {
+		err := data.ESError{
+			Base: errors.New("Could not connect to ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
-	res := data.StatusResponse{}
 
 	ctx := context.Background()
-	deleteIndex, err := data.Escon.Client.DeleteIndex(index).Do(ctx)
+	del, err := data.Escon.Client.DeleteIndex(index).Do(ctx)
 	if err != nil {
-		res.Status = "Error:" + err.Error()
-		ServeJSON(w, res)
+		err := data.ESError{
+			Base: errors.New("Could not delete index from ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
-	if deleteIndex.Acknowledged {
-		res.Status = "Index deleted"
-	} else {
-		res.Status = "Error: Index was not deleted"
+	if !del.Acknowledged {
+		err := data.ESError{
+			Base: errors.New("Index not deleted from ES"),
+		}
+		ResponseError(w, err)
+		return
 	}
-	ServeJSON(w, res)
+
+	ServeJSON(w, data.StatusResponse{Status: "Index deleted"})
 }
